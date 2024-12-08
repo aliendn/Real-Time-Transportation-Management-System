@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - route-service
+      - fleet-service
+      - notification-service
+
+  route-service:
+    build:
+      context: ./services/route-service
+    ports:
+      - "8081:8080"
+    environment:
+      POSTGRES_DB: routes
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  fleet-service:
+    build:
+      context: ./services/fleet-service
+    ports:
+      - "8082:8080"
+
+  notification-service:
+    build:
+      context: ./services/notification-service
+    ports:
+      - "8083:8080"
+
+  postgres-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: routes
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
